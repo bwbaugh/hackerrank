@@ -129,18 +129,18 @@ main = readLn >>= flip replicateM_ testCase
 
 testCase :: IO ()
 testCase = do
-    graph <- readGraph
-    case shortestPath 1 100 graph of
+    (graph, ladders, snakes) <- readGraph
+    case shortestPath 1 100 graph ladders snakes of
         [] -> putStrLn "-1"
         xs -> print $ length xs
 
-readGraph :: IO Graph
+readGraph :: IO (Graph, [Edge], [Edge])
 readGraph = do
     numLadder <- readLn
     ladders <- replicateM numLadder readEdge
     numSnake <- readLn
     snakes <- replicateM numSnake readEdge
-    return $ makeGraph ladders snakes
+    return (makeGraph ladders snakes, ladders, snakes)
 
 readEdge :: IO Edge
 readEdge = fmap ((\[x, y] -> (x, y)) . map read . words) getLine
@@ -160,8 +160,13 @@ initialBoard = fromEdges edges
 fromEdges :: [Edge] -> Graph
 fromEdges = M.fromListWith mappend . map (\(u, v) -> (u, [v]))
 
-shortestPath :: Node -> Node -> Graph -> Path
-shortestPath = undefined
+shortestPath :: Node -> Node -> Graph -> [Edge] -> [Edge] -> Path
+shortestPath source target graph ladders snakes =
+    filter (`notElem` specialSquares) . init . last $
+    bfs target graph IS.empty [[source]]
+  where
+    specialSquares :: [Node]
+    specialSquares = map fst ladders ++ map fst snakes
 
 bfs :: Node -> Graph -> IntSet -> [Path]  -> [Path]
 bfs _ _ _ [] = []
