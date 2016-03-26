@@ -146,5 +146,16 @@ readEdge = fmap ((\[x, y] -> (x, y)) . map read . words) getLine
 makeGraph :: [Edge] -> [Edge] -> Graph
 makeGraph = undefined
 
+initialBoard :: Graph
+initialBoard = fromEdges edges
+  where
+    edges =
+        filter ((<= 100) . snd) $
+        map (\[s, d] -> (s, s + d)) $
+        sequence [[1..100], [1..6]]
+
+fromEdges :: [Edge] -> Graph
+fromEdges = M.fromListWith mappend . map (\(u, v) -> (u, [v]))
+
 shortestPath :: Node -> Node -> Graph -> Path
 shortestPath = undefined
