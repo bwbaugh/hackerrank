@@ -127,14 +127,18 @@ main = readLn >>= flip replicateM_ testCase
 
 testCase :: IO ()
 testCase = do
+    graph <- readGraph
+    case shortestPath 1 100 graph of
+        [] -> putStrLn "-1"
+        xs -> print $ length xs
+
+readGraph :: IO Graph
+readGraph = do
     numLadder <- readLn
     ladders <- replicateM numLadder readEdge
     numSnake <- readLn
     snakes <- replicateM numSnake readEdge
-    let graph = makeGraph ladders snakes
-    case shortestPath 1 100 graph of
-        [] -> putStrLn "-1"
-        xs -> print $ length xs
+    return $ makeGraph ladders snakes
 
 readEdge :: IO Edge
 readEdge = fmap ((\[x, y] -> (x, y)) . map read . words) getLine
