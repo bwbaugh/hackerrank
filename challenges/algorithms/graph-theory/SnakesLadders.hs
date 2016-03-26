@@ -144,7 +144,11 @@ readEdge :: IO Edge
 readEdge = fmap ((\[x, y] -> (x, y)) . map read . words) getLine
 
 makeGraph :: [Edge] -> [Edge] -> Graph
-makeGraph = undefined
+makeGraph ladders snakes =
+    initialBoard `joinGraph` fromEdges ladders `joinGraph` fromEdges snakes
+
+joinGraph :: Graph -> Graph -> Graph
+joinGraph = M.unionWith mappend
 
 initialBoard :: Graph
 initialBoard = fromEdges edges
