@@ -111,6 +111,8 @@ rolls of the die for this shortest and best case scenario. So the
 answer for the first test is 3.
 -}
 import Control.Monad
+import Data.IntSet (IntSet)
+import qualified Data.IntSet as IS
 import qualified Data.Map as M
 
 -- | Adjacency list.
@@ -163,3 +165,11 @@ fromEdges = M.fromListWith mappend . map (\(u, v) -> (u, [v]))
 
 shortestPath :: Node -> Node -> Graph -> Path
 shortestPath = undefined
+
+bfs :: Node -> Graph -> IntSet -> [Path]  -> [Path]
+bfs _ _ _ [] = []
+bfs target graph seen (x:xs)
+    | target == head x = [x]
+    | otherwise = x : bfs target graph (IS.insert (head x) seen) (xs ++ x's)
+  where
+    x's = [neighbor : x | neighbor <- graph M.! head x, not (IS.member neighbor seen)]
