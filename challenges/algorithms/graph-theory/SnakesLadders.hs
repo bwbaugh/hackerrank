@@ -112,6 +112,7 @@ answer for the first test is 3.
 -}
 import Control.Monad
 import Data.IntSet (IntSet)
+import Data.Monoid
 import qualified Data.IntSet as IS
 import qualified Data.Map as M
 
