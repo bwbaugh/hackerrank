@@ -162,10 +162,13 @@ fromEdges :: [Edge] -> Graph
 fromEdges = M.fromListWith mappend . map (\(u, v) -> (u, [v]))
 
 shortestPath :: Node -> Node -> Graph -> [Edge] -> [Edge] -> Path
-shortestPath source target graph ladders snakes =
-    filter (`notElem` specialSquares) . init . last $
-    bfs target graph IS.empty [[source]]
+shortestPath source target graph ladders snakes
+    | target `elem` path = path
+    | otherwise = []
   where
+    path =
+        filter (`notElem` specialSquares) . init . last $
+        bfs target graph IS.empty [[source]]
     specialSquares :: [Node]
     specialSquares = map fst ladders ++ map fst snakes
 
