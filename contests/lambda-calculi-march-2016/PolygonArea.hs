@@ -35,20 +35,14 @@ The given polygon is a square, and each of its sides are 1 unit in length.
 area(P)=length×width=1×1=1, so we print 1 on a new line.
 -}
 import Control.Monad
-import Data.Function (on)
-import Data.List (sortBy)
-import Data.Tuple (swap)
 
 type Point = (Double, Double)
 
 main :: IO ()
-main = readLn >>= flip replicateM readPoint >>= print . area . sortClockwise
+main = readLn >>= flip replicateM readPoint >>= print . area
 
 readPoint :: IO Point
 readPoint = fmap ((\[x, y] -> (x, y)) . map read . words) getLine
-
-sortClockwise :: [Point] -> [Point]
-sortClockwise = sortBy (compare `on` (uncurry atan2 . swap))
 
 area :: [Point] -> Double
 area points = (xys - yxs) / 2
