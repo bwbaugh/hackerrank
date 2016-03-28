@@ -51,15 +51,9 @@ In the second input, we see three elements; 1 occurs at two places and
 In the third input, we see five elements. 1 and 0 occur twice. The
 element that occurs only once is 2.
 -}
-import qualified Data.IntSet as IS
+import Data.Bits (xor)
 
 main :: IO ()
-main = getLine >> fmap (map read . words) getLine >>= print . head . findUnique
-
-findUnique :: [Int] -> [Int]
-findUnique = IS.toList . go IS.empty IS.empty
+main = getLine >> readInts >>= print . foldr xor 0
   where
-    go _ unique [] = unique
-    go seen unique (x:xs)
-        | IS.member x seen = go seen (IS.delete x unique) xs
-        | otherwise = go (IS.insert x seen) (IS.insert x unique) xs
+    readInts = fmap (map read . words) getLine :: IO [Int]
