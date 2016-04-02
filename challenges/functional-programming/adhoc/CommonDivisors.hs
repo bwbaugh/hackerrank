@@ -51,8 +51,7 @@ testCase :: IO ()
 testCase = fmap (map read . words) getLine >>= print . length . commonDivisors
 
 commonDivisors :: [Int] -> [Int]
-commonDivisors xs =
-    filter (all ((== 0) . snd) . (map divMod xs <*>) . pure) minDivisors
+commonDivisors xs = filter (all (== 0) . (map mod xs <*>) . pure) minDivisors
   where
     minDivisors = go =<< candidates
     candidates = takeWhile (\x -> x <= (minXs `div` x)) [1..minXs]
