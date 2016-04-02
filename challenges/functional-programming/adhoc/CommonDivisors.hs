@@ -54,7 +54,7 @@ commonDivisors :: [Int] -> [Int]
 commonDivisors xs = filter (all (== 0) . (map mod xs <*>) . pure) minDivisors
   where
     minDivisors = go =<< candidates
-    candidates = takeWhile (\x -> x <= (minXs `div` x)) [1..minXs]
+    candidates = takeWhile ((<=) <*> (minXs `div`)) [1..minXs]
     minXs = minimum xs
     go x = case minXs `divMod` x of
         (d, 0) -> if x == d then [x] else [x, d]
